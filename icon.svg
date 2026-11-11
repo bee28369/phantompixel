@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <defs>
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="512" y2="512" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#0A140E" />
+      <stop offset="50%" stop-color="#050806" />
+      <stop offset="100%" stop-color="#000000" />
+    </linearGradient>
+    <linearGradient id="ghostGrad" x1="120" y1="90" x2="392" y2="420" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#22C55E" />
+      <stop offset="100%" stop-color="#10B981" />
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="115" fill="url(#bgGrad)" stroke="#22C55E" stroke-width="6" stroke-opacity="0.35" />
+  <!-- Subtle Pixel Grid Accents (Green & White) -->
+  <rect x="350" y="110" width="28" height="28" rx="6" fill="#22C55E" fill-opacity="0.45" />
+  <rect x="386" y="146" width="24" height="24" rx="5" fill="#FFFFFF" fill-opacity="0.35" />
+  <rect x="108" y="340" width="26" height="26" rx="6" fill="#22C55E" fill-opacity="0.35" />
+  <!-- Shield + Friendly Phantom Shape -->
+  <path d="M256 104C185.3 104 128 161.3 128 232V376C128 389.5 144.3 396.3 153.9 386.7L184 356.6L213.3 385.9C221.1 393.7 233.8 393.7 241.6 385.9L256 371.5L270.4 385.9C278.2 393.7 290.9 393.7 298.7 385.9L328 356.6L358.1 386.7C367.7 396.3 384 389.5 384 376V232C384 161.3 326.7 104 256 104Z" fill="url(#ghostGrad)" />
+  <!-- Eyes -->
+  <circle cx="212" cy="234" r="20" fill="#000000" />
+  <circle cx="300" cy="234" r="20" fill="#000000" />
+  <circle cx="218" cy="228" r="6" fill="#FFFFFF" />
+  <circle cx="306" cy="228" r="6" fill="#FFFFFF" />
+</svg>

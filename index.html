@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="PhantomPixel" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="theme-color" content="#000000" />
+  <title>PhantomPixel — Seen by People. Invisible to AI.</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" type="image/svg+xml" href="icon.svg" />
+  <link rel="apple-touch-icon" href="icon.svg" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="device-mode-ios">
+
+  <!-- Desktop Device Preview Bar (Hidden automatically on real mobile phones) -->
+  <div class="desktop-toolbar" id="desktopToolbar">
+    <div class="toolbar-brand">
+      <img src="icon.svg" alt="PhantomPixel" class="toolbar-logo" />
+      <span><strong>PhantomPixel</strong> Mobile Preview</span>
+    </div>
+    <div class="device-switcher" role="group" aria-label="Choose device frame">
+      <button type="button" class="device-btn active" data-device="ios" id="btnDeviceIos">
+        <span class="device-dot ios-dot"></span> iPhone (iOS)
+      </button>
+      <button type="button" class="device-btn" data-device="android" id="btnDeviceAndroid">
+        <span class="device-dot android-dot"></span> Android
+      </button>
+      <button type="button" class="device-btn" data-device="fullscreen" id="btnDeviceFull">
+        Full Screen
+      </button>
+    </div>
+  </div>
+
+  <!-- Phone Frame Wrapper -->
+  <div class="phone-stage">
+    <div class="phone-frame" id="phoneFrame">
+
+      <!-- iOS Dynamic Island / Android Camera Cutout + Status Bar -->
+      <div class="status-bar">
+        <span class="status-time" id="statusTime">9:41</span>
+        <div class="hardware-cutout">
+          <div class="dynamic-island"></div>
+          <div class="android-punchhole"></div>
+        </div>
+        <div class="status-icons">
+          <!-- Signal -->
+          <svg width="15" height="11" viewBox="0 0 15 11" fill="currentColor"><rect x="0" y="7" width="2.5" height="4" rx="0.8"/><rect x="4" y="5" width="2.5" height="6" rx="0.8"/><rect x="8" y="2.5" width="2.5" height="8.5" rx="0.8"/><rect x="12" y="0" width="2.5" height="11" rx="0.8"/></svg>
+          <!-- Wifi -->
+          <svg width="15" height="11" viewBox="0 0 16 12" fill="currentColor"><path d="M8 9.5a1.5 1.5 0 100 3 1.5 1.5 0 000-3zm-3.6-1.8a5.5 5.5 0 017.2 0l1.2-1.4a7.3 7.3 0 00-9.6 0l1.2 1.4zm-2.8-2.9a9.5 9.5 0 0112.8 0l1.2-1.4a11.3 11.3 0 00-15.2 0l1.2 1.4z"/></svg>
+          <!-- Battery -->
+          <svg width="22" height="11" viewBox="0 0 24 12" fill="currentColor"><rect x="0.5" y="0.5" width="20" height="11" rx="3" stroke="currentColor" stroke-width="1" fill="none"/><rect x="2" y="2" width="16" height="8" rx="1.5" fill="currentColor"/><path d="M22 4v4a2 2 0 000-4z"/></svg>
+        </div>
+      </div>
+
+      <!-- App Header -->
+      <header class="app-header">
+        <div class="brand-row">
+          <div class="brand-badge">
+            <img src="icon.svg" alt="PhantomPixel logo" class="app-logo" />
+            <div>
+              <h1 class="app-title">PhantomPixel</h1>
+              <p class="app-tagline">Seen by people. Invisible to AI.</p>
+            </div>
+          </div>
+          <span class="privacy-pill" title="Your files never leave your device">
+            <span class="pulse-dot"></span> 100% Private
+          </span>
+        </div>
+      </header>
+
+      <!-- Scrollable App Content -->
+      <main class="app-content" id="appContent">
+
+        <!-- ================= TAB 1: PROTECT ================= -->
+        <section class="tab-panel active" id="tabProtect">
+
+          <!-- Step 1: Pick a File -->
+          <div class="card">
+            <div class="step-header">
+              <span class="step-number">1</span>
+              <div>
+                <h2 class="step-title">Pick a Photo or PDF</h2>
+                <p class="step-subtitle">Full original quality is always kept (even 4K).</p>
+              </div>
+            </div>
+
+            <input type="file" id="fileInputProtect" accept="image/png,image/jpeg,image/webp,application/pdf,.pdf" hidden />
+
+            <!-- Drop / Tap Zone -->
+            <div class="upload-box" id="uploadBoxProtect" role="button" tabindex="0" aria-label="Tap to choose a photo or PDF">
+              <div id="uploadEmptyState" class="upload-empty">
+                <div class="upload-icon-circle">
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                    <polyline points="17 8 12 3 7 8"/>
+                    <line x1="12" y1="3" x2="12" y2="15"/>
+                  </svg>
+                </div>
+                <p class="upload-main-text">Tap to pick a Photo or PDF</p>
+                <p class="upload-sub-text">Supports Photos (PNG, JPG, WebP) &amp; PDF Documents</p>
+              </div>
+
+              <!-- Selected File Preview -->
+              <div id="uploadLoadedState" class="upload-loaded hidden">
+                <div class="file-preview-thumb" id="selectedThumbWrap">
+                  <canvas id="sourcePreviewCanvas"></canvas>
+                  <div id="pdfPreviewIcon" class="pdf-preview-badge hidden">PDF</div>
+                </div>
+                <div class="file-meta">
+                  <p class="file-name" id="selectedFileName">photo.png</p>
+                  <p class="file-details" id="selectedFileDetails">3840 × 2160 • Full Quality</p>
+                  <button type="button" class="link-btn" id="btnChangeFile">Pick a different file</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- File Type Switcher -->
+            <div class="quick-try-row">
+              <span class="quick-try-label">Switch mode:</span>
+              <div class="quick-try-btns">
+                <button type="button" class="chip-btn" id="btnTryPhoto">
+                  🖼️ 4K Photo
+                </button>
+                <button type="button" class="chip-btn" id="btnTryPdf">
+                  📄 PDF Document
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 2: Protection Options -->
+          <div class="card">
+            <div class="step-header">
+              <span class="step-number">2</span>
+              <div>
+                <h2 class="step-title">Choose Your Protection</h2>
+                <p class="step-subtitle">Pick one option below, or use both together.</p>
+              </div>
+            </div>
+
+            <!-- Quick Mode Choice Buttons -->
+            <div class="protection-mode-grid" role="radiogroup" aria-label="Choose protection mode">
+              <button type="button" class="mode-choice-btn" data-mode="cloak" id="btnModeCloak">
+                <span class="mode-choice-icon">🛡️</span>
+                <span class="mode-choice-title">Anti-Vision LLM Cloaking</span>
+                <span class="mode-choice-sub">Blind AI eyes only</span>
+              </button>
+
+              <button type="button" class="mode-choice-btn" data-mode="watermark" id="btnModeWatermark">
+                <span class="mode-choice-icon">🕵️</span>
+                <span class="mode-choice-title">Invisible Watermark</span>
+                <span class="mode-choice-sub">Hidden owner tag only</span>
+              </button>
+
+              <button type="button" class="mode-choice-btn active" data-mode="both" id="btnModeBoth">
+                <span class="mode-choice-icon">⚡</span>
+                <span class="mode-choice-title">Both (Full Shield)</span>
+                <span class="mode-choice-sub">Cloaking + Watermark</span>
+              </button>
+            </div>
+
+            <div class="divider"></div>
+
+            <!-- Option A: Anti-Vision LLM Cloaking -->
+            <div class="setting-block" id="blockAiCloaking">
+              <div class="setting-top">
+                <div class="setting-info">
+                  <div class="setting-title-row">
+                    <span class="setting-emoji">🛡️</span>
+                    <span class="setting-name">Anti-Vision LLM Cloaking</span>
+                  </div>
+                  <p class="setting-desc">Stops AI vision models and bots from reading, scanning, or training on your file.</p>
+                </div>
+                <label class="switch" aria-label="Toggle Anti-Vision LLM Cloaking">
+                  <input type="checkbox" id="toggleAiShield" checked />
+                  <span class="slider"></span>
+                </label>
+              </div>
+
+              <!-- Cloaking Strength (3 simple choices) -->
+              <div class="strength-selector" id="strengthSelectorWrap">
+                <span class="strength-label">Cloaking Strength:</span>
+                <div class="strength-pills" role="radiogroup" aria-label="Cloaking Strength">
+                  <button type="button" class="strength-pill" data-strength="light">
+                    <strong>Gentle</strong>
+                    <small>Light cloak</small>
+                  </button>
+                  <button type="button" class="strength-pill active" data-strength="normal">
+                    <strong>Smart ★</strong>
+                    <small>Best balance</small>
+                  </button>
+                  <button type="button" class="strength-pill" data-strength="strong">
+                    <strong>Max</strong>
+                    <small>Strongest cloak</small>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="divider" id="settingsDivider"></div>
+
+            <!-- Option B: Invisible Watermark -->
+            <div class="setting-block" id="blockInvisibleWatermark">
+              <div class="setting-top">
+                <div class="setting-info">
+                  <div class="setting-title-row">
+                    <span class="setting-emoji">🕵️</span>
+                    <span class="setting-name">Invisible Watermark</span>
+                  </div>
+                  <p class="setting-desc">Hides your name inside the file. Invisible to naked eyes, but proves it's yours.</p>
+                </div>
+                <label class="switch" aria-label="Toggle Invisible Watermark">
+                  <input type="checkbox" id="toggleSecretName" checked />
+                  <span class="slider"></span>
+                </label>
+              </div>
+
+              <div class="secret-input-wrap" id="secretInputWrap">
+                <label for="secretNameInput" class="input-label">Invisible Watermark Text (Owner Name or Note):</label>
+                <input
+                  type="text"
+                  id="secretNameInput"
+                  class="text-input"
+                  placeholder="e.g. Made by Alex • Do Not Copy"
+                  value="Owned by Creator • Protected with PhantomPixel"
+                  maxlength="140"
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 3: Action Button -->
+          <button type="button" class="primary-action-btn" id="btnProtectNow">
+            <span class="btn-sparkle">✨</span> Protect My File Now
+          </button>
+
+          <!-- RESULT CARD (Shown after clicking Protect) -->
+          <div class="card result-card hidden" id="protectResultCard">
+            <div class="result-banner">
+              <div class="result-check">✓</div>
+              <div>
+                <h3 class="result-title">Your File is Protected!</h3>
+                <p class="result-subtitle" id="resultQualityBadge">100% Original Quality Kept • Ready to Share</p>
+              </div>
+            </div>
+
+            <!-- Interactive Compare: People See vs AI Sees -->
+            <div class="view-compare-section">
+              <div class="compare-tabs" role="tablist">
+                <button type="button" class="compare-tab active" id="btnViewHuman" data-view="human">
+                  👀 What People See
+                </button>
+                <button type="button" class="compare-tab" id="btnViewAi" data-view="ai">
+                  🤖 What AI Sees
+                </button>
+              </div>
+
+              <div class="compare-stage">
+                <canvas id="resultCompareCanvas"></canvas>
+                <div class="compare-overlay-badge" id="compareOverlayBadge">
+                  Crystal clear to human eyes
+                </div>
+              </div>
+
+              <div class="ai-report-box" id="aiReportBox">
+                <div class="ai-report-row">
+                  <span class="ai-report-label">Human Eyes:</span>
+                  <span class="ai-report-val good">Looks 100% normal &amp; sharp</span>
+                </div>
+                <div class="ai-report-row">
+                  <span class="ai-report-label">AI Scanner:</span>
+                  <span class="ai-report-val blocked" id="aiScannerResultText">Blocked — AI sees scrambled patterns</span>
+                </div>
+                <div class="ai-report-row">
+                  <span class="ai-report-label">Secret Name:</span>
+                  <span class="ai-report-val good" id="secretNameStatusText">Hidden safely inside</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Save / Share / Verify Actions -->
+            <div class="result-actions">
+              <button type="button" class="save-btn" id="btnDownloadProtected">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                <span id="saveBtnLabel">Save Protected File</span>
+              </button>
+
+              <div class="secondary-actions-row">
+                <button type="button" class="secondary-btn" id="btnShareProtected">
+                  📤 Share to Apps
+                </button>
+                <button type="button" class="secondary-btn highlight-btn" id="btnTestInChecker">
+                  🔍 Test in "Check File" →
+                </button>
+              </div>
+            </div>
+          </div>
+
+        </section>
+
+        <!-- ================= TAB 2: CHECK FILE ================= -->
+        <section class="tab-panel" id="tabVerify">
+          <div class="card">
+            <div class="step-header">
+              <span class="step-number">🔍</span>
+              <div>
+                <h2 class="step-title">Find a Secret Name</h2>
+                <p class="step-subtitle">Pick any protected Photo or PDF to reveal who owns it.</p>
+              </div>
+            </div>
+
+            <input type="file" id="fileInputVerify" accept="image/png,image/jpeg,image/webp,application/pdf,.pdf" hidden />
+
+            <div class="upload-box" id="uploadBoxVerify" role="button" tabindex="0">
+              <div class="upload-empty">
+                <div class="upload-icon-circle verify-circle">
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"/>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                  </svg>
+                </div>
+                <p class="upload-main-text">Tap to Check a Photo or PDF</p>
+                <p class="upload-sub-text">We'll scan inside the file for a hidden name</p>
+              </div>
+            </div>
+
+            <!-- Verification Result Box -->
+            <div id="verifyResultBox" class="verify-result hidden">
+              <div class="verify-status-header" id="verifyStatusHeader">
+                <div class="verify-badge-icon" id="verifyBadgeIcon">✓</div>
+                <div>
+                  <h3 class="verify-status-title" id="verifyStatusTitle">Secret Name Found!</h3>
+                  <p class="verify-status-sub" id="verifyStatusSub">This file is protected by PhantomPixel.</p>
+                </div>
+              </div>
+
+              <div class="verify-details-card" id="verifyDetailsCard">
+                <div class="verify-field">
+                  <span class="verify-label">Hidden Owner / Note:</span>
+                  <div class="verify-secret-value" id="verifyOwnerValue">—</div>
+                </div>
+                <div class="verify-grid">
+                  <div class="verify-field">
+                    <span class="verify-label">Date Protected:</span>
+                    <span class="verify-meta-val" id="verifyDateValue">—</span>
+                  </div>
+                  <div class="verify-field">
+                    <span class="verify-label">AI Shield:</span>
+                    <span class="verify-meta-val" id="verifyShieldValue">—</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================= TAB 3: SIMPLE GUIDE & MOBILE SETUP ================= -->
+        <section class="tab-panel" id="tabGuide">
+          <div class="card">
+            <h2 class="guide-heading">How PhantomPixel Works</h2>
+            <p class="guide-lead">No confusing tech talk. Here is what happens when you protect a file:</p>
+
+            <div class="explain-list">
+              <div class="explain-item">
+                <div class="explain-icon">👀</div>
+                <div>
+                  <h3>1. People see your clear picture</h3>
+                  <p>Your photo or PDF keeps 100% of its sharpness and size (even 4K). Friends and clients see no difference at all.</p>
+                </div>
+              </div>
+
+              <div class="explain-item">
+                <div class="explain-icon">🤖</div>
+                <div>
+                  <h3>2. AI gets confused</h3>
+                  <p>We change tiny color dots by a fraction too small for human eyes to see, plus scramble hidden PDF text. When AI tries to read it, it gets lost.</p>
+                </div>
+              </div>
+
+              <div class="explain-item">
+                <div class="explain-icon">🕵️</div>
+                <div>
+                  <h3>3. Your secret name stays inside</h3>
+                  <p>Your name is woven right into the file itself. If anyone takes your work, drop the file into <strong>Check File</strong> to prove it belongs to you.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2 class="guide-heading">Install on iPhone &amp; Android</h2>
+            <p class="guide-lead">PhantomPixel is built for both iOS and Android:</p>
+
+            <div class="install-cards">
+              <div class="install-box">
+                <div class="install-platform">🍎 iPhone / iPad (iOS)</div>
+                <ol class="install-steps">
+                  <li>Open this app in <strong>Safari</strong> on your iPhone.</li>
+                  <li>Tap the <strong>Share</strong> button at the bottom.</li>
+                  <li>Tap <strong>"Add to Home Screen"</strong> — it launches full-screen just like an App Store app!</li>
+                </ol>
+              </div>
+
+              <div class="install-box">
+                <div class="install-platform">🤖 Android Phone</div>
+                <ol class="install-steps">
+                  <li>Open this app in <strong>Chrome</strong> on your Android phone.</li>
+                  <li>Tap the menu (<strong>⋮</strong>) and tap <strong>"Install App"</strong>.</li>
+                  <li>It installs right onto your app drawer and works offline!</li>
+                </ol>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </main>
+
+      <!-- Bottom Navigation Bar (iOS & Android Native Style) -->
+      <nav class="bottom-nav" role="navigation" aria-label="Main Navigation">
+        <button type="button" class="nav-item active" data-target="tabProtect" id="navBtnProtect">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          </svg>
+          <span>Protect</span>
+        </button>
+
+        <button type="button" class="nav-item" data-target="tabVerify" id="navBtnVerify">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"/>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+          <span>Check File</span>
+        </button>
+
+        <button type="button" class="nav-item" data-target="tabGuide" id="navBtnGuide">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+            <line x1="12" y1="17" x2="12.01" y2="17"/>
+          </svg>
+          <span>How It Works</span>
+        </button>
+      </nav>
+
+      <!-- Home Indicator Bar -->
+      <div class="home-indicator-wrap">
+        <div class="home-indicator"></div>
+      </div>
+
+      <!-- Toast Notification -->
+      <div class="toast hidden" id="appToast">Saved!</div>
+
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

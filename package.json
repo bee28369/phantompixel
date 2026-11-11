@@ -1,0 +1,12 @@
+{
+  "name": "phantom-pixel",
+  "version": "1.0.0",
+  "description": "PhantomPixel - Seen by people. Invisible to AI. Protect photos & PDFs with a secret signature.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
